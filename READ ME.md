@@ -29,12 +29,3 @@ This project focuses on understanding core engineering concepts rather than pass
 2. **User Inputs & Sliders:** Adding dynamic components (sliders and number inputs) allowing users to customize housing features in real time.
 3. **Real-Time Predictions:** Connecting the UI inputs directly to the trained Scikit-learn model so predictions update instantly on the screen.
 4. **Deployment:** Publishing the web application online so it can be accessed and tested by anyone.
-
----
-
-## 📂 Project Structure
-```text
-price-predictor/
-│
-├── app.py          # Main Python script (Data loading, ML training & prediction logic)
-└── README.md       # Project documentation
