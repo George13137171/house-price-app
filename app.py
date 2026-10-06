@@ -1,34 +1,35 @@
-from sklearn.datasets import fetch_california_housing
+
 from sklearn.linear_model import LinearRegression
 import pandas as pd 
 import streamlit as st
 
-try:
+link = st.text_input("Enter the link to the CSV file:", "https://raw.githubusercontent.com/ageron/handson-ml/master/datasets/housing/housing.csv")
+if link:
 
-    housing = fetch_california_housing(as_frame = True)
-    df = housing.frame
-    print(df.head())
-
-    y = df['MedHouseVal']
-    X = df.drop(columns = ['MedHouseVal'])
-
-    model = LinearRegression()
-    model.fit(X, y)
-
-    sample_house = X.iloc[[0]]
-    price = model.predict(sample_house)
-    print(f"Predicted price for the sample house: {price[0]}")
+    try:
 
 
+        df = pd.read_csv(link)
+        df = df.dropna()
+        target = st.selectbox("Select the target variable:", df.columns)
+
+        y = df[target]
+        X = df.drop(columns = [target])
+        X_num = X.select_dtypes(include=['number'])
+        model = LinearRegression()
+        model.fit(X_num, y)
 
 
 
-except Exception as e:
-    print(f"An error occured: {e}")
+
+
+
+    except Exception as e:
+        print(f"An error occured: {e}")
 
 user_inputs = {}
-for col in X.columns:
-    user_inputs[col] = st.number_input(f"Enter value for {col}", value=float(X[col].mean()))
+for col in X_num.columns:
+    user_inputs[col] = st.number_input(label= f"Enter value for {col}:", value = float (X_num[col].mean()))
 
 if st.button("Predict Price"):
     try:
