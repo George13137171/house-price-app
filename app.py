@@ -1,13 +1,15 @@
-
 from sklearn.linear_model import LinearRegression
 import pandas as pd 
 import streamlit as st
+import time
 
-link = st.text_input("Enter the link to the CSV file:", "https://raw.githubusercontent.com/ageron/handson-ml/master/datasets/housing/housing.csv")
+with st.sidebar:
+    st.title("House Price Prediction")
+    link = st.text_input("Enter the link to the CSV file:", "https://raw.githubusercontent.com/ageron/handson-ml/master/datasets/housing/housing.csv")
+
 if link:
 
     try:
-
 
         df = pd.read_csv(link)
         df = df.dropna()
@@ -19,11 +21,7 @@ if link:
         model = LinearRegression()
         model.fit(X_num, y)
 
-
-
-
-
-
+        
     except Exception as e:
         print(f"An error occured: {e}")
 
@@ -33,9 +31,16 @@ for col in X_num.columns:
 
 if st.button("Predict Price"):
     try:
-        user_input_df = pd.DataFrame([user_inputs])
-        predicted_price = model.predict(user_input_df)
-        st.write(f"Predicted price for the house: {predicted_price[0]}")
+        with st.spinner("Calculating prediction..."):
+            time.sleep(1)
+            user_input_df = pd.DataFrame([user_inputs])
+            predicted_price = model.predict(user_input_df)
+            final_price = max(0,predicted_price[0])
+
+        st.markdown("---")
+        st.metric(label="predicted price", 
+                  value=f"${final_price:,.2f}"
+                  )
+
     except Exception as e:
         st.error(f"An error occurred during prediction: {e}")
-
